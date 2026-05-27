@@ -27,7 +27,15 @@ public class SaveManager {
         String filePath = Constants.SAVE_DIR + "/" + Constants.SAVE_FILE;
         try {
             Player player = jsonService.loadFromFile(filePath);
-            if (player != null) return player;
+            if (player != null) {
+                if (player.getPlayerId() == null || player.getPlayerId().isEmpty()) {
+                    int count = player.getNextPlayerId();
+                    if (count == 0) count = 101;
+                    player.setPlayerId(formatPlayerId(count));
+                    if (player.getNextPlayerId() == 0) player.setNextPlayerId(101);
+                }
+                return player;
+            }
         } catch (Exception e) {
             System.err.println("Save file corrupt, creating new game: " + e.getMessage());
         }
@@ -36,6 +44,9 @@ public class SaveManager {
 
     public Player createNewGame() {
         Player player = new Player();
+        int id = player.getNextPlayerId();
+        player.setPlayerId(formatPlayerId(id));
+        player.setNextPlayerId(id + 1);
         player.getCharacters().addAll(Constants.createDefaultCharacters());
         player.getWeapons().addAll(Constants.createDefaultWeapons().subList(0, 3));
         player.getArmors().addAll(Constants.createDefaultArmors().subList(0, 2));
@@ -44,6 +55,14 @@ public class SaveManager {
             if (i.getType().equals("Consumable")) i.setQuantity(10);
         });
         return player;
+    }
+
+    private String formatPlayerId(int id) {
+        if (id <= 100) {
+            return String.format("%04d", id);
+        } else {
+            return String.format("%05d", id);
+        }
     }
 
     public boolean hasSaveData() {

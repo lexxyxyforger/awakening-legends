@@ -27,6 +27,7 @@ public class HomeScene {
     private final Label energyLabel;
     private final Label levelLabel;
     private final Label userNameLabel;
+    private final Label playerIdLabel;
     private final ProgressBar expBar;
     private final Label expLabel;
     private final VBox centerContent;
@@ -41,6 +42,7 @@ public class HomeScene {
         this.energyLabel = new Label();
         this.levelLabel = new Label();
         this.userNameLabel = new Label();
+        this.playerIdLabel = new Label();
         this.expBar = new ProgressBar();
         this.expLabel = new Label();
         this.centerContent = new VBox(12);
@@ -94,6 +96,9 @@ public class HomeScene {
         VBox nameBox = new VBox(2);
         userNameLabel.setText(player.getName());
         userNameLabel.getStyleClass().add("player-name");
+        String pid = player.getPlayerId() != null ? player.getPlayerId() : "----";
+        playerIdLabel.setText("ID: " + pid);
+        playerIdLabel.setStyle("-fx-text-fill: #64748b; -fx-font-size: 10px;");
         HBox lvlRow = new HBox(6);
         lvlRow.setAlignment(Pos.CENTER_LEFT);
         levelLabel.setText("Lv." + player.getLevel());
@@ -106,7 +111,7 @@ public class HomeScene {
         expLabel.setText(Constants.formatNumber(player.getExp()) + " / " + Constants.formatNumber(player.getExpToNext()));
         expLabel.setStyle("-fx-text-fill: #94a3b8; -fx-font-size: 10px;");
         lvlRow.getChildren().addAll(levelLabel, expBar, expLabel);
-        nameBox.getChildren().addAll(userNameLabel, lvlRow);
+        nameBox.getChildren().addAll(userNameLabel, playerIdLabel, lvlRow);
 
         HBox currencyBox = new HBox(10);
         currencyBox.setAlignment(Pos.CENTER_RIGHT);

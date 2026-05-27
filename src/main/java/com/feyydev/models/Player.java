@@ -7,6 +7,8 @@ import java.util.Map;
 
 public class Player {
     private String name;
+    private String playerId;
+    private int nextPlayerId;
     private int level;
     private long exp;
     private long expToNext;
@@ -42,6 +44,8 @@ public class Player {
 
     public Player() {
         this.name = "Player";
+        this.playerId = null;
+        this.nextPlayerId = 1;
         this.level = 1;
         this.exp = 0;
         this.expToNext = 100;
@@ -123,6 +127,10 @@ public class Player {
 
     public String getName() { return name; }
     public void setName(String n) { this.name = n; }
+    public String getPlayerId() { return playerId; }
+    public void setPlayerId(String id) { this.playerId = id; }
+    public int getNextPlayerId() { return nextPlayerId; }
+    public void setNextPlayerId(int n) { this.nextPlayerId = n; }
     public int getLevel() { return level; }
     public void setLevel(int l) { this.level = l; }
     public long getExp() { return exp; }
