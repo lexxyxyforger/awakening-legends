@@ -1,0 +1,105 @@
+/* ============================================
+   Legends Of Tournament - Home Lobby (Dark Theme)
+   ============================================ */
+
+/* --- Header --- */
+.home-header {
+    -fx-background-color: rgba(16, 24, 39, 0.7);
+    -fx-background-radius: 0 0 14 14;
+    -fx-border-color: rgba(59, 130, 246, 0.12);
+    -fx-border-width: 0 0 1 0;
+}
+
+.home-avatar {
+    -fx-background-radius: 18;
+    -fx-border-color: rgba(96, 165, 250, 0.35);
+    -fx-border-width: 2;
+    -fx-border-radius: 18;
+}
+
+.home-currency {
+    -fx-background-color: rgba(30, 41, 59, 0.5);
+    -fx-background-radius: 8;
+}
+
+/* --- Character Portrait --- */
+.char-rarity-ssr { -fx-text-fill: #FFD700; -fx-background-color: rgba(255,215,0,0.12); -fx-background-radius: 8; -fx-padding: 3 14; }
+.char-rarity-sr { -fx-text-fill: #C084FC; -fx-background-color: rgba(192,132,252,0.12); -fx-background-radius: 8; -fx-padding: 3 14; }
+.char-rarity-r { -fx-text-fill: #60A5FA; -fx-background-color: rgba(96,165,250,0.12); -fx-background-radius: 8; -fx-padding: 3 14; }
+
+.char-name {
+    -fx-text-fill: #f1f5f9;
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
+}
+
+.char-level {
+    -fx-text-fill: #93c5fd;
+    -fx-font-size: 14px;
+}
+
+.char-stats {
+    -fx-text-fill: #94a3b8;
+    -fx-font-size: 13px;
+}
+
+/* --- Side Rail Buttons --- */
+.side-rail-btn {
+    -fx-background-color: rgba(16, 24, 39, 0.45);
+    -fx-background-radius: 12;
+    -fx-border-color: rgba(96, 165, 250, 0.12);
+    -fx-border-radius: 12;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 6, 0, 0, 0);
+}
+
+.side-rail-btn:hover {
+    -fx-background-color: rgba(59, 130, 246, 0.15);
+    -fx-border-color: rgba(59, 130, 246, 0.25);
+    -fx-effect: dropshadow(gaussian, rgba(59,130,246,0.15), 8, 0, 0, 0);
+}
+
+.side-rail-btn-purple {
+    -fx-background-color: rgba(16, 24, 39, 0.45);
+    -fx-background-radius: 12;
+    -fx-border-color: rgba(168, 85, 247, 0.12);
+    -fx-border-radius: 12;
+    -fx-cursor: hand;
+}
+
+.side-rail-btn-purple:hover {
+    -fx-background-color: rgba(168, 85, 247, 0.15);
+    -fx-border-color: rgba(168, 85, 247, 0.25);
+    -fx-effect: dropshadow(gaussian, rgba(168,85,247,0.15), 8, 0, 0, 0);
+}
+
+/* --- Bottom Navigation --- */
+.home-bottom-nav {
+    -fx-background-color: rgba(16, 24, 39, 0.85);
+    -fx-background-radius: 20 20 0 0;
+    -fx-border-color: rgba(59, 130, 246, 0.1);
+    -fx-border-width: 1 0 0 0;
+}
+
+.nav-item-home {
+    -fx-background-color: rgba(59,130,246,0.12);
+    -fx-background-radius: 12;
+    -fx-border-color: rgba(59,130,246,0.2);
+    -fx-border-radius: 12;
+    -fx-border-width: 1;
+}
+
+.nav-icon-home { -fx-text-fill: #60a5fa; -fx-font-size: 32px; }
+.nav-icon-inactive { -fx-text-fill: #64748b; -fx-font-size: 32px; }
+
+.nav-label-home {
+    -fx-text-fill: #60a5fa;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+}
+
+.nav-label-inactive {
+    -fx-text-fill: #475569;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+}

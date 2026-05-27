@@ -45,7 +45,10 @@ public class WorldMapScene {
         topBar.setAlignment(Pos.CENTER_LEFT);
         Button backBtn = new Button("\u2190 Back");
         backBtn.getStyleClass().add("back-button");
-        backBtn.setOnAction(e -> navigator.accept(SceneType.HOME));
+        backBtn.setOnAction(e -> {
+            System.out.println("[DEBUG] WorldMapScene Back clicked");
+            navigator.accept(SceneType.HOME);
+        });
         Label title = new Label("\uD83C\uDF0D World Map");
         title.getStyleClass().add("scene-title");
 
@@ -82,7 +85,7 @@ public class WorldMapScene {
         root.setCenter(new VBox(10, chapterLabel, scroll));
 
         Scene s = new Scene(root, Constants.WINDOW_WIDTH, Constants.WINDOW_HEIGHT);
-        s.getStylesheets().add(getClass().getResource("/com/feyydev/style.css").toExternalForm());
+        s.getStylesheets().add(getClass().getResource("/com/feyydev/global.css").toExternalForm());
         return s;
     }
 
@@ -136,7 +139,7 @@ public class WorldMapScene {
             VBox info = new VBox(2);
             String stageName = isBoss ? "Boss Stage" : isElite ? "Elite Stage" : "Stage " + stage;
             Label nameLbl = new Label(stageName);
-            nameLbl.setStyle("-fx-text-fill: " + (isLocked ? "#64748b" : "#1e293b") + "; -fx-font-size: 14px; -fx-font-weight: bold;");
+            nameLbl.setStyle("-fx-text-fill: " + (isLocked ? "#64748b" : "#e2e8f0") + "; -fx-font-size: 14px; -fx-font-weight: bold;");
 
             String[] stageTypes = {"Training Grounds", "Dark Forest", "Mountain Pass", "Ancient Ruins", "Crystal Cave",
                 "Volcanic Ridge", "Temple of Trials", "Abyss Gate", "Heavenly Court", "Throne Room"};
@@ -157,7 +160,7 @@ public class WorldMapScene {
                 row.getChildren().addAll(iconLbl, info, spacer, lock);
             } else {
                 Label reward = new Label("\uD83D\uDCB0+" + (10 + stage * 5) + " \u2B50+" + (20 + stage * 8));
-                reward.setStyle("-fx-text-fill: #fbbf24; -fx-font-size: 11px;");
+                reward.getStyleClass().add("reward-badge-gold");
                 Button fightBtn = new Button("Fight");
                 fightBtn.getStyleClass().add("primary-button");
                 fightBtn.setOnAction(e -> startBattle(selectedChapter, s));

@@ -37,6 +37,16 @@ public class BattleScene {
     private final Label turnIndicator;
     private boolean battleEnded;
 
+    public void refresh() {
+        battleEnded = false;
+        actionButtons.setVisible(true);
+        battleResultBox.setVisible(false);
+        activeCharacter = player.getEquippedCharacter();
+        if (activeCharacter != null && battleManager.getCurrentEnemy() != null) {
+            updateUI();
+        }
+    }
+
     public BattleScene(Player player, Consumer<SceneType> navigator) {
         this.player = player;
         this.navigator = navigator;
@@ -73,7 +83,10 @@ public class BattleScene {
         topBar.setAlignment(Pos.CENTER_LEFT);
         Button backBtn = new Button("\u2190 Retreat");
         backBtn.getStyleClass().add("back-button");
-        backBtn.setOnAction(e -> navigator.accept(SceneType.HOME));
+        backBtn.setOnAction(e -> {
+            System.out.println("[DEBUG] BattleScene Back clicked");
+            navigator.accept(SceneType.HOME);
+        });
 
         Label title = new Label("\u2694 Battle");
         title.getStyleClass().add("scene-title");
@@ -138,15 +151,15 @@ public class BattleScene {
         root.setBottom(bottomSection);
 
         Scene s = new Scene(root, Constants.WINDOW_WIDTH, Constants.WINDOW_HEIGHT);
-        s.getStylesheets().add(getClass().getResource("/com/feyydev/style.css").toExternalForm());
+        s.getStylesheets().add(getClass().getResource("/com/feyydev/global.css").toExternalForm());
         return s;
     }
 
     private void buildActionButtons() {
-        Button attackBtn = styledButton("\u2694 Attack", "attack-button");
-        Button skillBtn = styledButton("\uD83D\uDCA5 Skill", "skill-button");
-        Button ultimateBtn = styledButton("\u2604 Ultimate", "ultimate-button");
-        Button potionBtn = styledButton("\uD83E\uDDEA Potion", "potion-button");
+        Button attackBtn = styledButton("\u2694 Attack");
+        Button skillBtn = styledButton("\uD83D\uDCA5 Skill");
+        Button ultimateBtn = styledButton("\u2604 Ultimate");
+        Button potionBtn = styledButton("\uD83E\uDDEA Potion");
 
         attackBtn.setOnAction(e -> executeAction(BattleManager.BattleAction.ATTACK));
         skillBtn.setOnAction(e -> executeAction(BattleManager.BattleAction.SKILL));
@@ -160,9 +173,9 @@ public class BattleScene {
         actionButtons.getChildren().addAll(row1, row2);
     }
 
-    private Button styledButton(String text, String styleClass) {
+    private Button styledButton(String text) {
         Button btn = new Button(text);
-        btn.getStyleClass().addAll("action-button", styleClass);
+        btn.getStyleClass().add("action-button");
         btn.setPrefWidth(150);
         return btn;
     }
@@ -228,9 +241,9 @@ public class BattleScene {
         HBox rewardRow = new HBox(16);
         rewardRow.setAlignment(Pos.CENTER);
         Label goldR = new Label("\uD83D\uDCB0+" + Constants.formatNumber(gold));
-        goldR.setStyle("-fx-text-fill: #fbbf24; -fx-font-size: 16px; -fx-font-weight: bold;");
+        goldR.getStyleClass().add("reward-badge-gold");
         Label expR = new Label("\u2B50+" + Constants.formatNumber(exp) + " EXP");
-        expR.setStyle("-fx-text-fill: #a855f7; -fx-font-size: 16px; -fx-font-weight: bold;");
+        expR.getStyleClass().add("reward-badge-exp");
         rewardRow.getChildren().addAll(goldR, expR);
 
         Button continueBtn = new Button("\u2694 Next Stage");
@@ -301,12 +314,13 @@ public class BattleScene {
             charHpLabel.setText(activeCharacter.getHp() + " / " + activeCharacter.getMaxHp());
         }
 
+        turnIndicator.getStyleClass().removeAll("turn-indicator-player", "turn-indicator-enemy");
         if (battleManager.isPlayerTurn()) {
             turnIndicator.setText("\u2694 Your Turn");
-            turnIndicator.setStyle("-fx-text-fill: #3b82f6; -fx-font-size: 16px; -fx-font-weight: bold;");
+            turnIndicator.getStyleClass().add("turn-indicator-player");
         } else {
             turnIndicator.setText("\uD83D\uDC7E Enemy's Turn...");
-            turnIndicator.setStyle("-fx-text-fill: #ef4444; -fx-font-size: 16px; -fx-font-weight: bold;");
+            turnIndicator.getStyleClass().add("turn-indicator-enemy");
         }
         actionButtons.setDisable(!battleManager.isPlayerTurn());
 
@@ -328,11 +342,12 @@ public class BattleScene {
 
         FadeTransition fade = new FadeTransition(Duration.seconds(1), damagePopLabel);
         fade.setFromValue(1.0); fade.setToValue(0.0);
+        damagePopLabel.setTranslateY(0);
         fade.play();
 
         TranslateTransition move = new TranslateTransition(Duration.seconds(0.8), damagePopLabel);
         move.setByY(-50);
         move.play();
-        move.setOnFinished(e -> { damagePopLabel.setVisible(false); damagePopLabel.setTranslateY(0); });
+        move.setOnFinished(e -> { damagePopLabel.setVisible(false); });
     }
 }

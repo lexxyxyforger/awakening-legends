@@ -1,0 +1,217 @@
+/* ============================================
+   Legends Of Tournament - Character Scene
+   Premium Dark Theme
+   ============================================ */
+
+/* --- Character Portrait --- */
+.char-portrait-glow {
+    -fx-effect: dropshadow(gaussian, rgba(59,130,246,0.35), 45, 0.25, 0, 0);
+}
+
+/* --- Info Card (Dark Glass) --- */
+.char-info-card {
+    -fx-background-color: rgba(18, 25, 45, 0.88);
+    -fx-background-radius: 20;
+    -fx-border-color: rgba(59, 130, 246, 0.25);
+    -fx-border-radius: 20;
+    -fx-border-width: 1.5;
+    -fx-effect: dropshadow(gaussian, rgba(59,130,246,0.1), 16, 0, 0, 4);
+}
+
+.char-info-header {
+    -fx-border-color: rgba(59,130,246,0.1);
+    -fx-border-width: 0 0 1 0;
+    -fx-padding: 16 20 12 20;
+}
+
+.char-name {
+    -fx-text-fill: #f1f5f9;
+    -fx-font-size: 22px;
+    -fx-font-weight: bold;
+}
+
+/* --- Rarity Badge --- */
+.char-rarity-ssr {
+    -fx-text-fill: #FFD700;
+    -fx-background-color: rgba(255,215,0,0.12);
+    -fx-border-color: rgba(255,215,0,0.2);
+    -fx-background-radius: 8;
+    -fx-border-radius: 8;
+    -fx-border-width: 1;
+    -fx-padding: 3 14;
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+}
+
+.char-rarity-sr {
+    -fx-text-fill: #C084FC;
+    -fx-background-color: rgba(192,132,252,0.12);
+    -fx-border-color: rgba(192,132,252,0.2);
+    -fx-background-radius: 8;
+    -fx-border-radius: 8;
+    -fx-border-width: 1;
+    -fx-padding: 3 14;
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+}
+
+.char-rarity-r {
+    -fx-text-fill: #60A5FA;
+    -fx-background-color: rgba(96,165,250,0.12);
+    -fx-border-color: rgba(96,165,250,0.2);
+    -fx-background-radius: 8;
+    -fx-border-radius: 8;
+    -fx-border-width: 1;
+    -fx-padding: 3 14;
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+}
+
+/* --- Power Score --- */
+.char-power-title {
+    -fx-text-fill: #64748b;
+    -fx-font-size: 9px;
+    -fx-font-weight: bold;
+}
+
+.char-power-value {
+    -fx-text-fill: #fbbf24;
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+}
+
+/* --- Stats Grid --- */
+.char-stats-grid {
+    -fx-padding: 14 20 16 20;
+}
+
+.stat-icon {
+    -fx-font-size: 14px;
+}
+
+.stat-label {
+    -fx-text-fill: #94a3b8;
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+}
+
+.stat-value-hp { -fx-text-fill: #4ade80; -fx-font-size: 13px; -fx-font-weight: bold; }
+.stat-value-atk { -fx-text-fill: #f87171; -fx-font-size: 13px; -fx-font-weight: bold; }
+.stat-value-def { -fx-text-fill: #60a5fa; -fx-font-size: 13px; -fx-font-weight: bold; }
+.stat-value-crit { -fx-text-fill: #f59e0b; -fx-font-size: 13px; -fx-font-weight: bold; }
+.stat-value-cdmg { -fx-text-fill: #f97316; -fx-font-size: 13px; -fx-font-weight: bold; }
+.stat-value-spd { -fx-text-fill: #fbbf24; -fx-font-size: 13px; -fx-font-weight: bold; }
+
+/* --- Footer --- */
+.char-footer {
+    -fx-background-color: rgba(0,0,0,0.15);
+    -fx-background-radius: 0 0 20 20;
+    -fx-padding: 10 20 14 20;
+}
+
+.char-footer-label {
+    -fx-text-fill: #93c5fd;
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+}
+
+.char-footer-awaken { -fx-text-fill: #fbbf24; -fx-font-size: 12px; -fx-font-weight: bold; }
+.char-footer-evolve { -fx-text-fill: #c084fc; -fx-font-size: 12px; -fx-font-weight: bold; }
+.char-footer-skill { -fx-text-fill: #94a3b8; -fx-font-size: 12px; }
+
+/* --- Action Buttons --- */
+.char-action-btn {
+    -fx-font-size: 11px;
+    -fx-font-weight: bold;
+    -fx-padding: 8 16;
+    -fx-background-radius: 10;
+    -fx-cursor: hand;
+}
+
+.char-btn-upgrade {
+    -fx-background-color: linear-gradient(to right, #2563eb, #3b82f6);
+    -fx-text-fill: #fff;
+}
+
+.char-btn-equip {
+    -fx-background-color: linear-gradient(to right, #7c3aed, #a855f7);
+    -fx-text-fill: #fff;
+}
+
+.char-btn-skills {
+    -fx-background-color: linear-gradient(to right, #059669, #10b981);
+    -fx-text-fill: #fff;
+}
+
+.char-btn-awaken {
+    -fx-background-color: linear-gradient(to right, #d97706, #f59e0b);
+    -fx-text-fill: #000;
+}
+
+.char-action-btn:hover {
+    -fx-effect: dropshadow(gaussian, rgba(59,130,246,0.3), 10, 0, 0, 0);
+    -fx-scale-x: 1.05;
+    -fx-scale-y: 1.05;
+}
+
+/* --- Selector --- */
+.char-selector-hint {
+    -fx-text-fill: #475569;
+    -fx-font-size: 9px;
+    -fx-font-weight: bold;
+}
+
+.char-card {
+    -fx-background-color: rgba(16, 24, 39, 0.35);
+    -fx-background-radius: 12;
+    -fx-border-radius: 12;
+    -fx-border-width: 1;
+    -fx-cursor: hand;
+}
+
+.char-card:hover {
+    -fx-background-color: rgba(59,130,246,0.08);
+    -fx-border-color: rgba(59,130,246,0.15);
+}
+
+.char-card-active {
+    -fx-background-color: rgba(59,130,246,0.12);
+    -fx-background-radius: 12;
+    -fx-border-color: rgba(59,130,246,0.3);
+    -fx-border-radius: 12;
+    -fx-border-width: 1.5;
+    -fx-effect: dropshadow(gaussian, rgba(59,130,246,0.15), 8, 0, 0, 0);
+}
+
+.char-card-icon {
+    -fx-font-size: 24px;
+}
+
+.char-card-name {
+    -fx-font-size: 9px;
+    -fx-font-weight: bold;
+    -fx-text-alignment: center;
+}
+
+.char-card-level {
+    -fx-text-fill: #94a3b8;
+    -fx-font-size: 8px;
+}
+
+/* --- Nav Buttons --- */
+.char-nav-btn {
+    -fx-background-color: rgba(16,24,39,0.5);
+    -fx-text-fill: #94a3b8;
+    -fx-font-size: 14px;
+    -fx-padding: 8 10;
+    -fx-background-radius: 10;
+    -fx-cursor: hand;
+    -fx-border-color: rgba(96,165,250,0.1);
+    -fx-border-radius: 10;
+}
+
+.char-nav-btn:hover {
+    -fx-background-color: rgba(59,130,246,0.12);
+    -fx-text-fill: #60a5fa;
+    -fx-border-color: rgba(59,130,246,0.2);
+}

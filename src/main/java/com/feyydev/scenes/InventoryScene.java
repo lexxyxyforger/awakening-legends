@@ -32,6 +32,7 @@ public class InventoryScene {
     }
 
     public Scene getScene() { return scene; }
+    public void refresh() { populateItems(); }
 
     private Scene buildScene() {
         BorderPane root = new BorderPane();
@@ -42,7 +43,10 @@ public class InventoryScene {
         topBar.setAlignment(Pos.CENTER_LEFT);
         Button backBtn = new Button("\u2190 Back");
         backBtn.getStyleClass().add("back-button");
-        backBtn.setOnAction(e -> navigator.accept(SceneType.HOME));
+        backBtn.setOnAction(e -> {
+            System.out.println("[DEBUG] InventoryScene Back clicked");
+            navigator.accept(SceneType.HOME);
+        });
         Label title = new Label("\uD83C\uDF92 Inventory");
         title.getStyleClass().add("scene-title");
 
@@ -79,7 +83,7 @@ public class InventoryScene {
         root.setCenter(new VBox(6, tabBar, scroll));
 
         Scene s = new Scene(root, Constants.WINDOW_WIDTH, Constants.WINDOW_HEIGHT);
-        s.getStylesheets().add(getClass().getResource("/com/feyydev/style.css").toExternalForm());
+        s.getStylesheets().add(getClass().getResource("/com/feyydev/global.css").toExternalForm());
         return s;
     }
 
@@ -137,7 +141,7 @@ public class InventoryScene {
 
         VBox info = new VBox(2);
         Label nameLbl = new Label(item.getName());
-        nameLbl.setStyle("-fx-text-fill: #1e293b; -fx-font-size: 14px; -fx-font-weight: bold;");
+        nameLbl.setStyle("-fx-text-fill: #e2e8f0; -fx-font-size: 14px; -fx-font-weight: bold;");
         Label descLbl = new Label(item.getDescription() + " (x" + item.getQuantity() + ")");
         descLbl.setStyle("-fx-text-fill: #94a3b8; -fx-font-size: 12px;");
         info.getChildren().addAll(nameLbl, descLbl);

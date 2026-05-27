@@ -9,6 +9,7 @@ public class RaidManager {
     private RaidBoss currentBoss;
     public long raidStartTime;
     private boolean raidActive;
+    private long currentRaidDamage;
     private List<RaidBoss.RaidContribution> contributions;
     private Random random;
     private Player player;
@@ -25,13 +26,20 @@ public class RaidManager {
 
     public void setPlayer(Player player) { this.player = player; }
 
+    public boolean canStartRaid() {
+        return player != null && player.getRaidTokens() > 0;
+    }
+
     public void startRaid(int chapter) {
+        if (!canStartRaid()) return;
+        player.spendRaidTokens(1);
         String[] bossNames = {"Titan Guardian", "Shadow Lord", "Demon King", "Celestial Dragon", "Supreme Overlord"};
         String bossName = bossNames[Math.min(chapter - 1, bossNames.length - 1)];
         int level = chapter * 20;
         currentBoss = new RaidBoss("raid_" + chapter, bossName, "Raid Boss", level);
         raidStartTime = System.currentTimeMillis();
         raidActive = true;
+        currentRaidDamage = 0;
         contributions.clear();
     }
 
@@ -49,8 +57,8 @@ public class RaidManager {
             totalDamage += Math.max(1, damage);
         }
         currentBoss.takeDamage(totalDamage);
+        currentRaidDamage += totalDamage;
         currentBoss.addContribution(player.getName(), totalDamage);
-        player.setTotalBossDamage(player.getTotalBossDamage() + totalDamage);
         if (!currentBoss.isAlive()) {
             raidActive = false;
         }
@@ -67,10 +75,13 @@ public class RaidManager {
 
     public List<RewardSummary> getRaidRewards() {
         List<RewardSummary> rewards = new ArrayList<>();
-        long totalDamage = player.getTotalBossDamage();
-        rewards.add(new RewardSummary("\uD83D\uDCB0 Gold", (long)(totalDamage * 0.1)));
-        rewards.add(new RewardSummary("\u2B50 EXP", (long)(totalDamage * 0.05)));
-        rewards.add(new RewardSummary("\uD83D\uDC8E Gems", (long)(Math.min(totalDamage * 0.01, 500))));
+        long damage = currentRaidDamage;
+        player.addGold((long)(damage * 0.1));
+        player.addExp((long)(damage * 0.05));
+        player.addGems((long)(Math.min(damage * 0.01, 500)));
+        rewards.add(new RewardSummary("Gold", (long)(damage * 0.1)));
+        rewards.add(new RewardSummary("EXP", (long)(damage * 0.05)));
+        rewards.add(new RewardSummary("Gems", (long)(Math.min(damage * 0.01, 500))));
         return rewards;
     }
 
@@ -78,6 +89,9 @@ public class RaidManager {
         if (currentBoss != null) return currentBoss.getContributions();
         return contributions;
     }
+
+    // --- Per-player damage for reward calc ---
+    public long getCurrentRaidDamage() { return currentRaidDamage; }
 
     public static class RewardSummary {
         private String name;

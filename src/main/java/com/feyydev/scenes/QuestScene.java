@@ -34,6 +34,7 @@ public class QuestScene {
 
     public Scene getScene() { return scene; }
     public void refreshQuests() { populateQuests(); }
+    public void refresh() { refreshQuests(); }
 
     private Scene buildScene() {
         BorderPane root = new BorderPane();
@@ -44,7 +45,10 @@ public class QuestScene {
         topBar.setAlignment(Pos.CENTER_LEFT);
         Button backBtn = new Button("\u2190 Back");
         backBtn.getStyleClass().add("back-button");
-        backBtn.setOnAction(e -> navigator.accept(SceneType.HOME));
+        backBtn.setOnAction(e -> {
+            System.out.println("[DEBUG] QuestScene Back clicked");
+            navigator.accept(SceneType.HOME);
+        });
         Label title = new Label("\uD83D\uDCCB Quests");
         title.getStyleClass().add("scene-title");
 
@@ -83,7 +87,7 @@ public class QuestScene {
         root.setCenter(new VBox(6, tabBar, scroll));
 
         Scene s = new Scene(root, Constants.WINDOW_WIDTH, Constants.WINDOW_HEIGHT);
-        s.getStylesheets().add(getClass().getResource("/com/feyydev/style.css").toExternalForm());
+        s.getStylesheets().add(getClass().getResource("/com/feyydev/global.css").toExternalForm());
         return s;
     }
 
@@ -136,8 +140,8 @@ public class QuestScene {
             iconLbl.setFont(Font.font(22));
 
             VBox titleBox = new VBox(2);
-            Label nameLbl = new Label(q.getName());
-            nameLbl.setStyle("-fx-text-fill: #1e293b; -fx-font-size: 14px; -fx-font-weight: bold;");
+        Label nameLbl = new Label(q.getName());
+        nameLbl.setStyle("-fx-text-fill: #e2e8f0; -fx-font-size: 14px; -fx-font-weight: bold;");
             Label descLbl = new Label(q.getDescription());
             descLbl.setStyle("-fx-text-fill: #94a3b8; -fx-font-size: 12px;");
             titleBox.getChildren().addAll(nameLbl, descLbl);
@@ -170,17 +174,17 @@ public class QuestScene {
             rewardRow.setAlignment(Pos.CENTER_LEFT);
             if (q.getRewardGold() > 0) {
                 Label r = new Label("\uD83D\uDCB0+" + Constants.formatNumber(q.getRewardGold()));
-                r.setStyle("-fx-text-fill: #fbbf24; -fx-font-size: 12px; -fx-font-weight: bold; -fx-background-color: rgba(251,191,36,0.08); -fx-padding: 3 8; -fx-background-radius: 6;");
+                r.getStyleClass().add("reward-badge-gold");
                 rewardRow.getChildren().add(r);
             }
             if (q.getRewardGems() > 0) {
                 Label r = new Label("\uD83D\uDC8E+" + Constants.formatNumber(q.getRewardGems()));
-                r.setStyle("-fx-text-fill: #c084fc; -fx-font-size: 12px; -fx-font-weight: bold; -fx-background-color: rgba(192,132,252,0.08); -fx-padding: 3 8; -fx-background-radius: 6;");
+                r.getStyleClass().add("reward-badge-gems");
                 rewardRow.getChildren().add(r);
             }
             if (q.getRewardExp() > 0) {
                 Label r = new Label("\u2B50+" + Constants.formatNumber(q.getRewardExp()) + " EXP");
-                r.setStyle("-fx-text-fill: #a855f7; -fx-font-size: 12px; -fx-font-weight: bold; -fx-background-color: rgba(168,85,247,0.08); -fx-padding: 3 8; -fx-background-radius: 6;");
+                r.getStyleClass().add("reward-badge-exp");
                 rewardRow.getChildren().add(r);
             }
 

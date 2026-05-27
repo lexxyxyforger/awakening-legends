@@ -11,16 +11,22 @@ public class GachaManager {
     private List<GameCharacter> allCharacters;
     private List<SummonBanner> banners;
     private List<GameCharacter> pullHistory;
-    private int pitySSR;
-    private int pitySR;
+    private Map<String, Integer> bannerPitySSR;
+    private Map<String, Integer> bannerPitySR;
     private int totalPulls;
+    private PlayerProvider playerProvider;
+
+    @FunctionalInterface
+    public interface PlayerProvider {
+        com.feyydev.models.Player get();
+    }
 
     private GachaManager() {
         random = new Random();
         pullHistory = new ArrayList<>();
         banners = new ArrayList<>();
-        pitySSR = 0;
-        pitySR = 0;
+        bannerPitySSR = new HashMap<>();
+        bannerPitySR = new HashMap<>();
         totalPulls = 0;
     }
 
@@ -29,6 +35,7 @@ public class GachaManager {
         return instance;
     }
 
+    public void setPlayerProvider(PlayerProvider provider) { this.playerProvider = provider; }
     public void init() {
         allCharacters = Constants.createDefaultCharacters();
         banners = new ArrayList<>(Constants.createSummonBanners());
@@ -36,8 +43,11 @@ public class GachaManager {
     }
 
     public GameCharacter pull(SummonBanner banner) {
-        pitySSR++;
-        pitySR++;
+        String bannerId = banner != null ? banner.getId() : "default";
+        int pitySSR = bannerPitySSR.getOrDefault(bannerId, 0) + 1;
+        int pitySR = bannerPitySR.getOrDefault(bannerId, 0) + 1;
+        bannerPitySSR.put(bannerId, pitySSR);
+        bannerPitySR.put(bannerId, pitySR);
         totalPulls++;
 
         double ssrRate = Constants.SSR_RATE + (banner != null ? banner.getRateUpBonus() : 0);
@@ -53,11 +63,11 @@ public class GachaManager {
         String rarity;
         if (roll < ssrRate) {
             rarity = "SSR";
-            pitySSR = 0;
-            pitySR = 0;
+            bannerPitySSR.put(bannerId, 0);
+            bannerPitySR.put(bannerId, 0);
         } else if (roll < ssrRate + srRate) {
             rarity = "SR";
-            pitySR = 0;
+            bannerPitySR.put(bannerId, 0);
         } else {
             rarity = "R";
         }
@@ -86,6 +96,9 @@ public class GachaManager {
             pulled.getCategory()
         );
         pullHistory.add(result);
+        if (playerProvider != null && playerProvider.get() != null) {
+            playerProvider.get().getCharacters().add(result);
+        }
         return result;
     }
 
@@ -103,7 +116,8 @@ public class GachaManager {
     }
     public List<GameCharacter> getPullHistory() { return pullHistory; }
     public void clearHistory() { pullHistory.clear(); }
-    public int getPitySSR() { return pitySSR; }
-    public int getPitySR() { return pitySR; }
+
+    public int getPitySSR(String bannerId) { return bannerPitySSR.getOrDefault(bannerId, 0); }
+    public int getPitySR(String bannerId) { return bannerPitySR.getOrDefault(bannerId, 0); }
     public int getTotalPulls() { return totalPulls; }
 }

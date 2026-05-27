@@ -5,15 +5,15 @@ import com.feyydev.models.Player;
 import com.feyydev.scenes.*;
 import com.feyydev.services.MailService;
 import com.feyydev.services.AudioManager;
+import com.feyydev.services.SceneManager;
 import com.feyydev.utils.Constants;
 import javafx.application.Application;
-import javafx.scene.Scene;
 import javafx.stage.Stage;
 import java.time.LocalDate;
 
 public class Main extends Application {
 
-        public enum SceneType {
+    public enum SceneType {
         HOME, BATTLE, CHARACTER, INVENTORY, SHOP, QUEST, GACHA, EVENT,
         MAILBOX, ATTENDANCE, WORLD_MAP, RAID, STORY
     }
@@ -40,6 +40,13 @@ public class Main extends Application {
         stage.setTitle(Constants.GAME_TITLE);
         stage.setResizable(false);
 
+        initGame();
+        SplashScene splashScene = new SplashScene(this::navigateTo);
+        stage.setScene(splashScene.getScene());
+        stage.show();
+    }
+
+    private void initGame() {
         SaveManager saveManager = SaveManager.getInstance();
         player = saveManager.loadGame();
 
@@ -51,11 +58,10 @@ public class Main extends Application {
         ArenaManager.getInstance().setPlayer(player);
         EventManager.getInstance().setPlayer(player);
         GachaManager.getInstance().init();
+        GachaManager.getInstance().setPlayerProvider(() -> player);
 
         checkLoginReward();
         MailService.getInstance().cleanExpiredMails(player);
-
-        AudioManager.getInstance().playHomeBGM();
 
         homeScene = new HomeScene(player, this::navigateTo);
         battleScene = new BattleScene(player, this::navigateTo);
@@ -71,9 +77,9 @@ public class Main extends Application {
         raidScene = new RaidScene(player, this::navigateTo);
         storyScene = new StoryScene(player, this::navigateTo);
 
-        navigateTo(SceneType.HOME);
+        SceneManager.getInstance().init(this::navigateTo);
+
         stage.setOnCloseRequest(e -> saveManager.saveGame(player));
-        stage.show();
     }
 
     private void checkLoginReward() {
@@ -89,25 +95,21 @@ public class Main extends Application {
     }
 
     private void navigateTo(SceneType type) {
-        saveCurrentState();
         switch (type) {
             case HOME -> { homeScene.refresh(); stage.setScene(homeScene.getScene()); AudioManager.getInstance().playHomeBGM(); }
-            case BATTLE -> { stage.setScene(battleScene.getScene()); AudioManager.getInstance().playBattleBGM(); }
+            case BATTLE -> { battleScene.refresh(); stage.setScene(battleScene.getScene()); AudioManager.getInstance().playBattleBGM(); }
             case CHARACTER -> { characterScene.refreshGrid(); stage.setScene(characterScene.getScene()); }
-            case INVENTORY -> stage.setScene(inventoryScene.getScene());
-            case SHOP -> stage.setScene(shopScene.getScene());
+            case INVENTORY -> { inventoryScene.refresh(); stage.setScene(inventoryScene.getScene()); }
+            case SHOP -> { shopScene.refresh(); stage.setScene(shopScene.getScene()); }
             case QUEST -> { questScene.refreshQuests(); stage.setScene(questScene.getScene()); }
-            case GACHA -> stage.setScene(gachaScene.getScene());
+            case GACHA -> { gachaScene.refresh(); stage.setScene(gachaScene.getScene()); }
             case EVENT -> { eventScene.refresh(); stage.setScene(eventScene.getScene()); }
             case MAILBOX -> { mailboxScene.refresh(); stage.setScene(mailboxScene.getScene()); }
             case ATTENDANCE -> { attendanceScene.refresh(); stage.setScene(attendanceScene.getScene()); }
             case WORLD_MAP -> { worldMapScene.refresh(); stage.setScene(worldMapScene.getScene()); }
-            case RAID -> stage.setScene(raidScene.getScene());
+            case RAID -> { raidScene.refresh(); stage.setScene(raidScene.getScene()); }
             case STORY -> { storyScene.refresh(); stage.setScene(storyScene.getScene()); }
         }
-    }
-
-    private void saveCurrentState() {
         SaveManager.getInstance().saveGame(player);
     }
 

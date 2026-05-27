@@ -22,7 +22,16 @@ public class Item {
         this.value = value;
         this.quantity = 1;
         this.healAmount = 0;
-        this.icon = "\uD83D\uDCE6";
+        this.icon = getIconForType(type);
+    }
+    
+    private static String getIconForType(String type) {
+        if (type == null) return "\uD83D\uDCE6";
+        return switch (type) {
+            case "Consumable" -> "\uD83E\uDDEA";
+            case "Material" -> "\uD83D\uDC8E";
+            default -> "\uD83D\uDCE6";
+        };
     }
 
     public Item(String id, String name, String type, String description, String rarity, int value, long healAmount) {

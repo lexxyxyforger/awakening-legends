@@ -50,6 +50,7 @@ public class RaidScene {
     }
 
     public Scene getScene() { return scene; }
+    public void refresh() { updateRaidUI(); }
 
     private Scene buildScene() {
         BorderPane root = new BorderPane();
@@ -61,6 +62,7 @@ public class RaidScene {
         Button backBtn = new Button("\u2190 Back");
         backBtn.getStyleClass().add("back-button");
         backBtn.setOnAction(e -> {
+            System.out.println("[DEBUG] RaidScene Back clicked");
             if (raidTimer != null) raidTimer.stop();
             navigator.accept(SceneType.HOME);
         });
@@ -110,7 +112,7 @@ public class RaidScene {
         startBtn.setOnAction(e -> startRaid());
 
         Button attackBtn = new Button("\uD83D\uDCA5 Attack!");
-        attackBtn.getStyleClass().addAll("action-button", "attack-button");
+        attackBtn.getStyleClass().add("action-button");
         attackBtn.setOnAction(e -> executeAttack());
         attackBtn.setDisable(true);
 
@@ -133,7 +135,7 @@ public class RaidScene {
         root.setCenter(content);
 
         Scene s = new Scene(root, Constants.WINDOW_WIDTH, Constants.WINDOW_HEIGHT);
-        s.getStylesheets().add(getClass().getResource("/com/feyydev/style.css").toExternalForm());
+        s.getStylesheets().add(getClass().getResource("/com/feyydev/global.css").toExternalForm());
         return s;
     }
 
@@ -148,7 +150,7 @@ public class RaidScene {
         actionPanel.getChildren().clear();
 
         Button attackBtn = new Button("\uD83D\uDCA5 Attack!");
-        attackBtn.getStyleClass().addAll("action-button", "attack-button");
+        attackBtn.getStyleClass().add("action-button");
         attackBtn.setOnAction(e -> executeAttack());
 
         Button retreatBtn = new Button("\uD83C\uDFC3 Retreat");
@@ -192,10 +194,10 @@ public class RaidScene {
             entry.setAlignment(Pos.CENTER_LEFT);
             Label rankLbl = new Label("#" + rank);
             rankLbl.getStyleClass().add("contribution-rank");
-            Label nameLbl = new Label(c.getPlayerName());
-            nameLbl.setStyle("-fx-text-fill: #334155; -fx-font-size: 12px;");
+        Label nameLbl = new Label(c.getPlayerName());
+        nameLbl.setStyle("-fx-text-fill: #e2e8f0; -fx-font-size: 12px;");
             Label dmgLbl = new Label(Constants.formatNumber(c.getDamage()));
-            dmgLbl.setStyle("-fx-text-fill: #fbbf24; -fx-font-size: 12px; -fx-font-weight: bold;");
+            dmgLbl.getStyleClass().add("reward-badge-gold");
             Region spacer = new Region();
             HBox.setHgrow(spacer, Priority.ALWAYS);
             entry.getChildren().addAll(rankLbl, nameLbl, spacer, dmgLbl);
@@ -259,8 +261,8 @@ public class RaidScene {
         Label endLbl = new Label("\uD83C\uDFC3 Raid Ended");
         endLbl.setStyle("-fx-text-fill: #fbbf24; -fx-font-size: 22px; -fx-font-weight: bold;");
 
-        Label summary = new Label("Total Damage: " + Constants.formatNumber(player.getTotalBossDamage()));
-        summary.setStyle("-fx-text-fill: #334155; -fx-font-size: 14px;");
+        Label summary = new Label("Total Damage: " + Constants.formatNumber(raidManager.getCurrentRaidDamage()));
+        summary.setStyle("-fx-text-fill: #e2e8f0; -fx-font-size: 14px;");
 
         Button homeBtn = new Button("Back to Home");
         homeBtn.getStyleClass().add("action-button");

@@ -46,7 +46,10 @@ public class EventScene {
         topBar.setAlignment(Pos.CENTER_LEFT);
         Button backBtn = new Button("\u2190 Back");
         backBtn.getStyleClass().add("back-button");
-        backBtn.setOnAction(e -> navigator.accept(SceneType.HOME));
+        backBtn.setOnAction(e -> {
+            System.out.println("[DEBUG] EventScene Back clicked");
+            navigator.accept(SceneType.HOME);
+        });
         Label title = new Label("\uD83C\uDF89 Events");
         title.getStyleClass().add("scene-title");
         topBar.getChildren().addAll(backBtn, title);
@@ -88,7 +91,7 @@ public class EventScene {
         root.setCenter(content);
 
         Scene s = new Scene(root, Constants.WINDOW_WIDTH, Constants.WINDOW_HEIGHT);
-        s.getStylesheets().add(getClass().getResource("/com/feyydev/style.css").toExternalForm());
+        s.getStylesheets().add(getClass().getResource("/com/feyydev/global.css").toExternalForm());
         return s;
     }
 
@@ -115,7 +118,7 @@ public class EventScene {
         VBox header = new VBox(4);
         header.setAlignment(Pos.CENTER);
         Label catTitle = new Label(Constants.getEventIcon(activeCategory) + " " + activeCategory);
-        catTitle.setStyle("-fx-text-fill: #0f1729; -fx-font-size: 18px; -fx-font-weight: bold;");
+        catTitle.setStyle("-fx-text-fill: #f1f5f9; -fx-font-size: 18px; -fx-font-weight: bold;");
         Label catDesc = new Label(Constants.getEventDescription(activeCategory));
         catDesc.setStyle("-fx-text-fill: #64748b; -fx-font-size: 12px;");
         header.getChildren().addAll(catTitle, catDesc);
@@ -146,8 +149,8 @@ public class EventScene {
             icon.setFont(Font.font(20));
 
             VBox mInfo = new VBox(2);
-            Label mName = new Label(m.name());
-            mName.setStyle("-fx-text-fill: #1e293b; -fx-font-size: 13px; -fx-font-weight: bold;");
+        Label mName = new Label(m.name());
+        mName.setStyle("-fx-text-fill: #e2e8f0; -fx-font-size: 13px; -fx-font-weight: bold;");
             Label mDesc = new Label(m.description());
             mDesc.setStyle("-fx-text-fill: #64748b; -fx-font-size: 11px;");
 

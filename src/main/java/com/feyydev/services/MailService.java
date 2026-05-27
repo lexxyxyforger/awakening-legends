@@ -1,7 +1,8 @@
 package com.feyydev.services;
 
-import com.feyydev.models.Mail;
-import com.feyydev.models.Player;
+import com.feyydev.managers.InventoryManager;
+import com.feyydev.managers.CharacterManager;
+import com.feyydev.models.*;
 import com.feyydev.utils.Constants;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -52,6 +53,32 @@ public class MailService {
         player.addGold(mail.getRewardGold());
         player.addGems(mail.getRewardGems());
         player.addExp(mail.getRewardExp());
+        if (mail.getRewardSummonTickets() > 0) {
+            var ticket = new Item("summon_ticket", "Summon Ticket", "Material",
+                "Used for 1 summon", "Rare", 0);
+            ticket.setQuantity(mail.getRewardSummonTickets());
+            InventoryManager.getInstance().addItem(ticket);
+        }
+        if (mail.getRewardShards() > 0) {
+            String rar = mail.getSenderName().contains("SSR") ? "SSR" : "SR";
+            int shards = mail.getRewardShards();
+            for (var c : player.getCharacters()) {
+                if (c.getRarity().equals(rar)) {
+                    c.setShards(c.getShards() + shards);
+                    break;
+                }
+            }
+        }
+        if (mail.getRewardItemId() != null && !mail.getRewardItemId().isEmpty()) {
+            var items = Constants.createDefaultPotions();
+            for (var item : items) {
+                if (item.getId().equals(mail.getRewardItemId())) {
+                    item.setQuantity(1);
+                    InventoryManager.getInstance().addItem(item);
+                    break;
+                }
+            }
+        }
     }
 
     public void cleanExpiredMails(Player player) {

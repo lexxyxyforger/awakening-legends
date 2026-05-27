@@ -25,17 +25,20 @@ public class AttendanceManager {
     public List<AttendanceReward> getRewards() { return rewards; }
 
     public AttendanceReward getCurrentReward() {
+        if (rewards == null || rewards.isEmpty()) return null;
         int day = Math.min(player.getAttendanceDay(), rewards.size() - 1);
         return rewards.get(Math.max(0, day));
     }
 
     public boolean canClaim() {
-        return player.getAttendanceDay() < rewards.size();
+        return rewards != null && player.getAttendanceDay() < rewards.size();
     }
 
     public boolean claimReward() {
         if (!canClaim()) return false;
-        AttendanceReward reward = rewards.get(player.getAttendanceDay());
+        int day = player.getAttendanceDay();
+        if (day < 0 || day >= rewards.size()) return false;
+        AttendanceReward reward = rewards.get(day);
         switch (reward.getRewardType()) {
             case "GOLD" -> player.addGold(reward.getRewardAmount());
             case "GEMS" -> player.addGems(reward.getRewardAmount());
@@ -56,29 +59,27 @@ public class AttendanceManager {
                 InventoryManager.getInstance().addItem(ticket);
             }
             case "CHARACTER" -> {
-                if (reward.getRarity().equals("SSR")) {
-                    var ssrs = Constants.createDefaultCharacters().stream()
-                        .filter(c -> c.getRarity().equals("SSR")).toList();
-                    if (!ssrs.isEmpty()) {
-                        GameCharacter freeChar = ssrs.get((int)(System.currentTimeMillis() % ssrs.size()));
-                        GameCharacter newChar = new GameCharacter(freeChar.getId() + "_att", freeChar.getName(), "SSR", freeChar.getCategory());
-                        CharacterManager.getInstance().addCharacter(newChar);
-                    }
-                } else {
-                    var srs = Constants.createDefaultCharacters().stream()
-                        .filter(c -> c.getRarity().equals("SR")).toList();
-                    if (!srs.isEmpty()) {
-                        GameCharacter freeChar = srs.get((int)(System.currentTimeMillis() % srs.size()));
-                        GameCharacter newChar = new GameCharacter(freeChar.getId() + "_att", freeChar.getName(), "SR", freeChar.getCategory());
-                        CharacterManager.getInstance().addCharacter(newChar);
-                    }
+                String rarity = reward.getRarity() != null ? reward.getRarity() : "SR";
+                var chars = Constants.createDefaultCharacters().stream()
+                    .filter(c -> c.getRarity().equals(rarity)).toList();
+                if (!chars.isEmpty()) {
+                    int idx = (int)(Math.random() * chars.size());
+                    GameCharacter freeChar = chars.get(idx);
+                    GameCharacter newChar = new GameCharacter(
+                        freeChar.getId() + "_att_" + System.currentTimeMillis(),
+                        freeChar.getName(), freeChar.getRarity(), freeChar.getCategory()
+                    );
+                    CharacterManager.getInstance().addCharacter(newChar);
                 }
             }
         }
-        player.setAttendanceDay(player.getAttendanceDay() + 1);
+        player.setAttendanceDay(day + 1);
         return true;
     }
 
-    public int getCurrentDay() { return Math.min(player.getAttendanceDay() + 1, rewards.size()); }
-    public int getTotalDays() { return rewards.size(); }
+    public int getCurrentDay() {
+        if (rewards == null || rewards.isEmpty()) return 1;
+        return Math.min(player.getAttendanceDay() + 1, rewards.size());
+    }
+    public int getTotalDays() { return rewards != null ? rewards.size() : 0; }
 }

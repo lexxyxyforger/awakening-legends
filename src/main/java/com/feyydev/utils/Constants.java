@@ -17,6 +17,7 @@ public class Constants {
     public static final int MAX_ENERGY = 100;
     public static final String SAVE_DIR = "saves";
     public static final String SAVE_FILE = "save.json";
+    public static final String PROFILES_DIR = SAVE_DIR + "/profiles";
     public static final int PITY_SSR = 90;
     public static final int PITY_SR = 10;
     public static final int MAX_TEAM_SIZE = 6;
@@ -28,6 +29,7 @@ public class Constants {
         return switch (rarity) {
             case "SSR" -> "#FFD700";
             case "SR" -> "#C084FC";
+            case "R" -> "#60A5FA";
             case "Legendary", "Mythic" -> "#FF6B35";
             case "Epic" -> "#a855f7";
             case "Rare" -> "#3b82f6";
@@ -306,9 +308,21 @@ public class Constants {
     }
 
     public static String formatNumber(long n) {
-        if (n >= 1_000_000_000) return n / 1_000_000_000 + "B";
-        if (n >= 1_000_000) return n / 1_000_000 + "M";
-        if (n >= 1_000) return n / 1_000 + "K";
+        if (n >= 1_000_000_000) {
+            long b = n / 1_000_000_000;
+            long remainder = (n % 1_000_000_000) / 100_000_000;
+            return b + "." + remainder + "B";
+        }
+        if (n >= 1_000_000) {
+            long m = n / 1_000_000;
+            long remainder = (n % 1_000_000) / 100_000;
+            return m + "." + remainder + "M";
+        }
+        if (n >= 1_000) {
+            long k = n / 1_000;
+            long remainder = (n % 1_000) / 100;
+            return k + "." + remainder + "K";
+        }
         return String.valueOf(n);
     }
 
@@ -453,7 +467,6 @@ public class Constants {
 
     public static List<EventMission> createEventMissions() {
         return Arrays.asList(
-            // Beginner Event
             new EventMission("ev_beg_1", "Beginner Event", "First Stage", "Complete stage 1-1", "\u2694", "STAGE", 1, 500, 0, 100, 0),
             new EventMission("ev_beg_2", "Beginner Event", "Character Collector", "Obtain 3 characters", "\uD83D\uDC64", "CHARACTERS", 3, 1000, 50, 200, 0),
             new EventMission("ev_beg_3", "Beginner Event", "Player Level 5", "Reach account level 5", "\u2B50", "PLAYER_LEVEL", 5, 1500, 100, 500, 0),
@@ -462,23 +475,19 @@ public class Constants {
             new EventMission("ev_beg_6", "Beginner Event", "Player Level 10", "Reach account level 10", "\u2B50", "PLAYER_LEVEL", 10, 3000, 200, 1000, 0),
             new EventMission("ev_beg_7", "Beginner Event", "SSR Obtained", "Obtain 1 SSR character", "\uD83C\uDF1F", "SSR_COUNT", 1, 5000, 300, 2000, 10),
             new EventMission("ev_beg_8", "Beginner Event", "Chapter 1 Clear", "Complete all stages in Chapter 1", "\uD83C\uDFC6", "CHAPTER", 1, 5000, 500, 3000, 0),
-            // Growth Event
             new EventMission("ev_gro_1", "Growth Event", "Player Level 20", "Reach account level 20", "\u2B50", "PLAYER_LEVEL", 20, 3000, 200, 1500, 0),
             new EventMission("ev_gro_2", "Growth Event", "Character Collector", "Obtain 10 characters", "\uD83D\uDC64", "CHARACTERS", 10, 4000, 300, 2000, 5),
             new EventMission("ev_gro_3", "Growth Event", "Stage Master", "Clear 50 stages", "\u2694", "STAGE", 50, 5000, 400, 3000, 0),
             new EventMission("ev_gro_4", "Growth Event", "Power 10K", "Reach 10,000 total power", "\uD83D\uDCAA", "POWER", 10000, 5000, 500, 2500, 10),
             new EventMission("ev_gro_5", "Growth Event", "Veteran Summoner", "Summon 30 times", "\uD83C\uDF81", "SUMMON", 30, 8000, 600, 4000, 15),
-            // Carnival Event
             new EventMission("ev_car_1", "Carnival Event", "Loyal Player", "Login for 3 days", "\uD83D\uDCC5", "LOGIN", 3, 2000, 100, 500, 0),
             new EventMission("ev_car_2", "Carnival Event", "Battle Hardened", "Win 10 battles", "\u2694", "BATTLE_WIN", 10, 3000, 200, 1000, 3),
             new EventMission("ev_car_3", "Carnival Event", "Boss Slayer", "Defeat 5 bosses", "\uD83D\uDC7E", "BOSS_KILL", 5, 4000, 300, 1500, 5),
             new EventMission("ev_car_4", "Carnival Event", "Gold Hoarder", "Collect 50K gold", "\uD83D\uDCB0", "GOLD", 50000, 5000, 400, 2000, 0),
-            // Ranking Event
             new EventMission("ev_rank_1", "Ranking Event", "PvP Fighter", "Win 3 PvP matches", "\u2694", "PVP_WIN", 3, 3000, 200, 1500, 0),
             new EventMission("ev_rank_2", "Ranking Event", "Arena Dominator", "Win 10 PvP matches", "\u2694", "PVP_WIN", 10, 5000, 500, 3000, 5),
             new EventMission("ev_rank_3", "Ranking Event", "Powerhouse", "Reach 50K total power", "\uD83D\uDCAA", "POWER", 50000, 10000, 1000, 5000, 10),
             new EventMission("ev_rank_4", "Ranking Event", "Raid Attacker", "Deal 100K boss damage", "\uD83D\uDC7E", "BOSS_DMG", 100000, 8000, 800, 4000, 5),
-            // New Player Event
             new EventMission("ev_new_1", "New Player Event", "First Login", "Login for the first time", "\uD83C\uDF89", "LOGIN", 1, 1000, 100, 500, 3),
             new EventMission("ev_new_2", "New Player Event", "Team Building", "Build a team of 3 characters", "\uD83D\uDC64", "CHARACTERS", 3, 2000, 200, 1000, 0),
             new EventMission("ev_new_3", "New Player Event", "Stage Explorer", "Clear 5 stages", "\u2694", "STAGE", 5, 3000, 300, 1500, 5),

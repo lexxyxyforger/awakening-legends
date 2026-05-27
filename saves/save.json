@@ -1,9 +1,12 @@
 {
   "name": "Player",
+  "playerId": "0001",
+  "nextPlayerId": 1,
+  "profileImagePath": "/home/nightfall/GOH-RPG/goh-rpg/saves/profiles/0001.png",
   "level": 17,
-  "exp": 462,
+  "exp": 562,
   "expToNext": 1848,
-  "gold": 22860,
+  "gold": 23310,
   "gems": 1360,
   "energy": 40,
   "maxEnergy": 50,
@@ -28,7 +31,7 @@
       "category": "Martial Artist",
       "level": 4,
       "maxLevel": 120,
-      "hp": 5599,
+      "hp": 5600,
       "maxHp": 5600,
       "attack": 380,
       "defense": 260,
@@ -1393,6 +1396,17 @@
       "healAmount": 0,
       "quantity": 1,
       "icon": "📦"
+    },
+    {
+      "id": "small_potion",
+      "name": "Small Potion",
+      "type": "Consumable",
+      "description": "Purchased from Gold shop",
+      "rarity": "Common",
+      "value": 50,
+      "healAmount": 0,
+      "quantity": 1,
+      "icon": "🧪"
     }
   ],
   "weapons": [
@@ -1469,9 +1483,9 @@
   "completedAchievements": [],
   "lastStoryChapter": 1,
   "eventProgress": {
-    "LOGIN": 19,
-    "PLAYER_LEVEL": 348,
-    "POWER": 640396,
+    "LOGIN": 49,
+    "PLAYER_LEVEL": 858,
+    "POWER": 1661836,
     "SUMMON": 3,
     "CHARACTERS": 3,
     "STAGE": 6,
@@ -1486,6 +1500,7 @@
     "ev_beg_2",
     "ev_beg_3",
     "ev_beg_6",
-    "ev_car_1"
+    "ev_car_1",
+    "ev_beg_1"
   ]
 }

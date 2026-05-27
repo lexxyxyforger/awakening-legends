@@ -33,6 +33,7 @@ public class StoryScene {
     private int currentDialogueIndex;
     private List<StoryDialogue> currentDialogues;
     private boolean autoMode;
+    private PauseTransition autoTimer;
 
     public StoryScene(Player player, Consumer<SceneType> navigator) {
         this.player = player;
@@ -70,7 +71,7 @@ public class StoryScene {
         root.getChildren().addAll(chapterPanel, dialoguePanel);
 
         Scene s = new Scene(root, Constants.WINDOW_WIDTH, Constants.WINDOW_HEIGHT);
-        s.getStylesheets().add(getClass().getResource("/com/feyydev/style.css").toExternalForm());
+        s.getStylesheets().add(getClass().getResource("/com/feyydev/global.css").toExternalForm());
         return s;
     }
 
@@ -85,7 +86,10 @@ public class StoryScene {
         topBar.setPadding(new Insets(0, 0, 8, 0));
         Button backBtn = new Button("\u2190 Back");
         backBtn.getStyleClass().add("back-button");
-        backBtn.setOnAction(e -> navigator.accept(SceneType.HOME));
+        backBtn.setOnAction(e -> {
+            System.out.println("[DEBUG] StoryScene Back clicked");
+            navigator.accept(SceneType.HOME);
+        });
         Label title = new Label("\uD83D\uDCD6 Story");
         title.getStyleClass().add("scene-title");
         topBar.getChildren().addAll(backBtn, title);
@@ -130,6 +134,7 @@ public class StoryScene {
             } else {
                 String bg = Constants.getStoryBackground(ch);
                 card.setStyle("-fx-background-color: " + bg + "; -fx-background-radius: 14; -fx-border-color: rgba(59,130,246,0.2); -fx-border-radius: 14; -fx-cursor: hand;");
+                card.setPickOnBounds(true);
                 if (completed) {
                     Label check = new Label("\u2705 Read");
                     check.setStyle("-fx-text-fill: #10b981; -fx-font-size: 11px; -fx-font-weight: bold;");
@@ -263,15 +268,24 @@ public class StoryScene {
         ft.play();
 
         if (autoMode) {
-            PauseTransition pause = new PauseTransition(Duration.seconds(3));
-            pause.setOnFinished(e -> nextDialogue());
-            pause.play();
+            stopAutoTimer();
+            autoTimer = new PauseTransition(Duration.seconds(3));
+            autoTimer.setOnFinished(e -> nextDialogue());
+            autoTimer.play();
         }
 
         nextBtn.setText(currentDialogueIndex < currentDialogues.size() - 1 ? "\u25B6 Next" : "\u2705 Finish");
     }
 
+    private void stopAutoTimer() {
+        if (autoTimer != null) {
+            autoTimer.stop();
+            autoTimer = null;
+        }
+    }
+
     private void nextDialogue() {
+        stopAutoTimer();
         currentDialogueIndex++;
         showDialogue();
     }
@@ -283,10 +297,11 @@ public class StoryScene {
 
     private void toggleAuto() {
         autoMode = !autoMode;
+        stopAutoTimer();
         if (autoMode) {
-            PauseTransition pause = new PauseTransition(Duration.seconds(3));
-            pause.setOnFinished(e -> { if (autoMode) nextDialogue(); });
-            pause.play();
+            autoTimer = new PauseTransition(Duration.seconds(3));
+            autoTimer.setOnFinished(e -> { if (autoMode) nextDialogue(); });
+            autoTimer.play();
         }
     }
 

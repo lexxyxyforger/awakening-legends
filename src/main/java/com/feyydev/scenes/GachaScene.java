@@ -41,6 +41,7 @@ public class GachaScene {
     }
 
     public Scene getScene() { return scene; }
+    public void refresh() { populateBanners(); updatePity(); }
 
     private Scene buildScene() {
         BorderPane root = new BorderPane();
@@ -51,7 +52,10 @@ public class GachaScene {
         topBar.setAlignment(Pos.CENTER_LEFT);
         Button backBtn = new Button("\u2190 Back");
         backBtn.getStyleClass().add("back-button");
-        backBtn.setOnAction(e -> navigator.accept(SceneType.HOME));
+        backBtn.setOnAction(e -> {
+            System.out.println("[DEBUG] GachaScene Back clicked");
+            navigator.accept(SceneType.HOME);
+        });
         Label title = new Label("\u2728 Summon");
         title.getStyleClass().add("scene-title");
 
@@ -106,7 +110,7 @@ public class GachaScene {
         root.setBottom(bottomPanel);
 
         Scene s = new Scene(root, Constants.WINDOW_WIDTH, Constants.WINDOW_HEIGHT);
-        s.getStylesheets().add(getClass().getResource("/com/feyydev/style.css").toExternalForm());
+        s.getStylesheets().add(getClass().getResource("/com/feyydev/global.css").toExternalForm());
         return s;
     }
 
@@ -189,7 +193,7 @@ public class GachaScene {
             characterManager.addCharacter(c);
 
             if ("SSR".equals(c.getRarity())) {
-                showToast("\uD83C\uDF89 SSR: " + c.getName() + "!");
+                System.out.println("[Gacha] SSR pulled: " + c.getName());
             }
         }
 
@@ -228,7 +232,8 @@ public class GachaScene {
     }
 
     private void updatePity() {
-        pityLabel.setText("\uD83D\uDC8E " + player.getGems() + " | Pity: SSR " + gachaManager.getPitySSR() + "/" + Constants.PITY_SSR);
+        String bannerId = selectedBanner != null ? selectedBanner.getId() : "default";
+        pityLabel.setText("\uD83D\uDC8E " + player.getGems() + " | Pity: SSR " + gachaManager.getPitySSR(bannerId) + "/" + Constants.PITY_SSR);
     }
 
     private void showToast(String msg) {

@@ -44,7 +44,10 @@ public class AttendanceScene {
         topBar.setAlignment(Pos.CENTER_LEFT);
         Button backBtn = new Button("\u2190 Back");
         backBtn.getStyleClass().add("back-button");
-        backBtn.setOnAction(e -> navigator.accept(SceneType.HOME));
+        backBtn.setOnAction(e -> {
+            System.out.println("[DEBUG] AttendanceScene Back clicked");
+            navigator.accept(SceneType.HOME);
+        });
         Label title = new Label("\uD83D\uDCC5 28-Day Attendance");
         title.getStyleClass().add("scene-title");
 
@@ -78,14 +81,14 @@ public class AttendanceScene {
         root.setCenter(scroll);
 
         Scene s = new Scene(root, Constants.WINDOW_WIDTH, Constants.WINDOW_HEIGHT);
-        s.getStylesheets().add(getClass().getResource("/com/feyydev/style.css").toExternalForm());
+        s.getStylesheets().add(getClass().getResource("/com/feyydev/global.css").toExternalForm());
         return s;
     }
 
     private void populateGrid() {
         rewardGrid.getChildren().clear();
         int currentDay = player.getAttendanceDay();
-        dayLabel.setText("Day " + attendanceManager.getCurrentDay() + "/28");
+        dayLabel.setText("Day " + currentDay + "/28");
 
         claimBtn.setText(currentDay < 28 ? "\uD83C\uDFC6 Claim Day " + (currentDay + 1) : "\u2705 Complete");
         claimBtn.setDisable(currentDay >= 28);
@@ -123,7 +126,7 @@ public class AttendanceScene {
             } else {
                 rewardLabel = new Label("+" + Constants.formatNumber(reward.getRewardAmount()));
             }
-            rewardLabel.setStyle("-fx-text-fill: #334155; -fx-font-size: 12px; -fx-font-weight: bold;");
+            rewardLabel.setStyle("-fx-text-fill: #e2e8f0; -fx-font-size: 12px; -fx-font-weight: bold;");
 
             Label nameLbl = new Label(reward.getRewardName());
             nameLbl.setStyle("-fx-text-fill: #94a3b8; -fx-font-size: 10px;");

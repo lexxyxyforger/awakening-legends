@@ -9,6 +9,7 @@ public class Player {
     private String name;
     private String playerId;
     private int nextPlayerId;
+    private String profileImagePath;
     private int level;
     private long exp;
     private long expToNext;
@@ -46,6 +47,7 @@ public class Player {
         this.name = "Player";
         this.playerId = null;
         this.nextPlayerId = 1;
+        this.profileImagePath = null;
         this.level = 1;
         this.exp = 0;
         this.expToNext = 100;
@@ -81,6 +83,7 @@ public class Player {
     }
 
     public void addExp(long amount) {
+        if (level >= 100) return;
         exp += amount;
         while (exp >= expToNext && level < 100) {
             exp -= expToNext;
@@ -88,6 +91,11 @@ public class Player {
             expToNext = (long)(100 * Math.pow(1.2, level - 1));
         }
         if (level >= 100) { exp = 0; expToNext = 0; }
+    }
+
+    public double getExpProgress() {
+        if (level >= 100 || expToNext <= 0) return 1.0;
+        return Math.min(1.0, (double) exp / expToNext);
     }
 
     public boolean useEnergy(int amount) {
@@ -131,11 +139,13 @@ public class Player {
     public void setPlayerId(String id) { this.playerId = id; }
     public int getNextPlayerId() { return nextPlayerId; }
     public void setNextPlayerId(int n) { this.nextPlayerId = n; }
+    public String getProfileImagePath() { return profileImagePath; }
+    public void setProfileImagePath(String p) { this.profileImagePath = p; }
     public int getLevel() { return level; }
     public void setLevel(int l) { this.level = l; }
     public long getExp() { return exp; }
     public void setExp(long e) { this.exp = e; }
-    public long getExpToNext() { return expToNext; }
+    public long getExpToNext() { return level >= 100 ? 0 : expToNext; }
     public void setExpToNext(long e) { this.expToNext = e; }
     public long getGold() { return gold; }
     public void setGold(long g) { this.gold = g; }
@@ -171,9 +181,9 @@ public class Player {
     public void setPvpScore(int p) { this.pvpScore = p; }
     public String getGuildName() { return guildName; }
     public void setGuildName(String g) { this.guildName = g; }
-
     public int getLastStoryChapter() { return lastStoryChapter; }
     public void setLastStoryChapter(int c) { this.lastStoryChapter = c; }
+
     public List<GameCharacter> getCharacters() { if (characters == null) characters = new ArrayList<>(); return characters; }
     public void setCharacters(List<GameCharacter> c) { this.characters = c; }
     public List<Item> getInventory() { if (inventory == null) inventory = new ArrayList<>(); return inventory; }

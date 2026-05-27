@@ -1,5 +1,7 @@
 package com.feyydev.models;
 
+import java.util.Objects;
+
 public class StatusEffect {
     private String id;
     private String name;
@@ -22,6 +24,18 @@ public class StatusEffect {
     public boolean tick() {
         remainingTurns--;
         return remainingTurns <= 0;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof StatusEffect that)) return false;
+        return Objects.equals(id, that.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(id);
     }
 
     public String getId() { return id; }

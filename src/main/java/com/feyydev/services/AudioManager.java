@@ -1,17 +1,21 @@
 package com.feyydev.services;
 
-import java.util.Random;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
+import java.io.InputStream;
+import java.net.URL;
 
 public class AudioManager {
     private static AudioManager instance;
     private boolean muted;
     private double volume;
-    private final Random random;
+    private MediaPlayer bgmPlayer;
+    private boolean audioAvailable;
 
     private AudioManager() {
         this.muted = false;
         this.volume = 0.7;
-        this.random = new Random();
+        this.audioAvailable = checkAudioFile();
     }
 
     public static AudioManager getInstance() {
@@ -19,9 +23,48 @@ public class AudioManager {
         return instance;
     }
 
+    private boolean checkAudioFile() {
+        try (InputStream is = getClass().getResourceAsStream("/com/feyydev/assets/music/soundtrack.mp3")) {
+            if (is == null) {
+                System.out.println("[Audio] soundtrack.mp3 not found on classpath");
+                return false;
+            }
+            byte[] header = new byte[12];
+            if (is.read(header) < 12) return false;
+            String brand = new String(header, 4, 4);
+            if ("dash".equals(brand)) {
+                System.out.println("[Audio] soundtrack.mp3 is not playable audio (DASH manifest) — replace with a real MP3");
+                return false;
+            }
+        } catch (Exception e) {
+            return false;
+        }
+        return true;
+    }
+
     public void playBGM(String type) {
-        if (muted) return;
-        System.out.println("[Audio] BGM: " + type);
+        stopBGM();
+        if (muted || !audioAvailable) return;
+
+        URL resource = getClass().getResource("/com/feyydev/assets/music/soundtrack.mp3");
+        if (resource == null) return;
+        try {
+            Media media = new Media(resource.toExternalForm());
+            bgmPlayer = new MediaPlayer(media);
+            bgmPlayer.setVolume(volume);
+            bgmPlayer.setCycleCount(MediaPlayer.INDEFINITE);
+            bgmPlayer.play();
+        } catch (Exception e) {
+            System.out.println("[Audio] BGM failed (" + type + "): " + e.getMessage());
+        }
+    }
+
+    public void stopBGM() {
+        if (bgmPlayer != null) {
+            bgmPlayer.stop();
+            bgmPlayer.dispose();
+            bgmPlayer = null;
+        }
     }
 
     public void playHomeBGM() { playBGM("home"); }
@@ -48,7 +91,13 @@ public class AudioManager {
     public void playUpgrade() { playSFX("upgrade"); }
 
     public boolean isMuted() { return muted; }
-    public void setMuted(boolean muted) { this.muted = muted; }
+    public void setMuted(boolean muted) {
+        this.muted = muted;
+        if (muted) stopBGM();
+    }
     public double getVolume() { return volume; }
-    public void setVolume(double volume) { this.volume = Math.max(0, Math.min(1, volume)); }
+    public void setVolume(double volume) {
+        this.volume = Math.max(0, Math.min(1, volume));
+        if (bgmPlayer != null) bgmPlayer.setVolume(this.volume);
+    }
 }

@@ -1,4 +1,11 @@
 /home/nightfall/GOH-RPG/goh-rpg/src/main/java/com/feyydev/Main.java
+/home/nightfall/GOH-RPG/goh-rpg/src/main/java/com/feyydev/components/CharacterCardComponent.java
+/home/nightfall/GOH-RPG/goh-rpg/src/main/java/com/feyydev/components/CharacterDetailPanel.java
+/home/nightfall/GOH-RPG/goh-rpg/src/main/java/com/feyydev/components/GlassPanel.java
+/home/nightfall/GOH-RPG/goh-rpg/src/main/java/com/feyydev/components/MissionCard.java
+/home/nightfall/GOH-RPG/goh-rpg/src/main/java/com/feyydev/components/NavigationBar.java
+/home/nightfall/GOH-RPG/goh-rpg/src/main/java/com/feyydev/components/RewardCard.java
+/home/nightfall/GOH-RPG/goh-rpg/src/main/java/com/feyydev/components/TopBar.java
 /home/nightfall/GOH-RPG/goh-rpg/src/main/java/com/feyydev/managers/ArenaManager.java
 /home/nightfall/GOH-RPG/goh-rpg/src/main/java/com/feyydev/managers/AttendanceManager.java
 /home/nightfall/GOH-RPG/goh-rpg/src/main/java/com/feyydev/managers/BattleManager.java
@@ -32,9 +39,11 @@
 /home/nightfall/GOH-RPG/goh-rpg/src/main/java/com/feyydev/scenes/QuestScene.java
 /home/nightfall/GOH-RPG/goh-rpg/src/main/java/com/feyydev/scenes/RaidScene.java
 /home/nightfall/GOH-RPG/goh-rpg/src/main/java/com/feyydev/scenes/ShopScene.java
+/home/nightfall/GOH-RPG/goh-rpg/src/main/java/com/feyydev/scenes/SplashScene.java
 /home/nightfall/GOH-RPG/goh-rpg/src/main/java/com/feyydev/scenes/StoryScene.java
 /home/nightfall/GOH-RPG/goh-rpg/src/main/java/com/feyydev/scenes/WorldMapScene.java
 /home/nightfall/GOH-RPG/goh-rpg/src/main/java/com/feyydev/services/AudioManager.java
 /home/nightfall/GOH-RPG/goh-rpg/src/main/java/com/feyydev/services/JsonService.java
 /home/nightfall/GOH-RPG/goh-rpg/src/main/java/com/feyydev/services/MailService.java
+/home/nightfall/GOH-RPG/goh-rpg/src/main/java/com/feyydev/services/SceneManager.java
 /home/nightfall/GOH-RPG/goh-rpg/src/main/java/com/feyydev/utils/Constants.java

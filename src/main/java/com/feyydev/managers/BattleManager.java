@@ -34,8 +34,8 @@ public class BattleManager {
 
     public void startBattle(List<GameCharacter> team, List<Enemy> enemies) {
         this.team.clear();
-        this.team.addAll(team);
-        this.enemies = enemies;
+        this.team.addAll(new ArrayList<>(team));
+        this.enemies = new ArrayList<>(enemies);
         this.playerTurn = true;
         this.turnCount = 0;
         this.battleLog.clear();
@@ -93,8 +93,12 @@ public class BattleManager {
         if (playerTurn || team.isEmpty()) return BattleResult.ONGOING;
         for (Enemy enemy : enemies) {
             if (!enemy.isAlive()) continue;
-            GameCharacter target = team.get(random.nextInt(team.size()));
-            if (target.getHp() <= 0) continue;
+            List<GameCharacter> alive = new ArrayList<>();
+            for (GameCharacter c : team) {
+                if (c.getHp() > 0) alive.add(c);
+            }
+            if (alive.isEmpty()) continue;
+            GameCharacter target = alive.get(random.nextInt(alive.size()));
             enemyAttack(enemy, target);
         }
         turnCount++;
@@ -165,7 +169,6 @@ public class BattleManager {
             battleLog.add(c.getName() + " uses " + potion.getName() + " recovers " + heal + " HP");
         } else {
             battleLog.add("No potions available!");
-            characterAttack(c, enemies.get(currentTargetIndex));
         }
     }
 
@@ -190,8 +193,8 @@ public class BattleManager {
         return enemies.stream().mapToLong(Enemy::getExpReward).sum();
     }
 
-    public List<GameCharacter> getTeam() { return team; }
-    public List<Enemy> getEnemies() { return enemies; }
+    public List<GameCharacter> getTeam() { return Collections.unmodifiableList(team); }
+    public List<Enemy> getEnemies() { return enemies != null ? Collections.unmodifiableList(enemies) : List.of(); }
     public Enemy getCurrentEnemy() {
         if (currentTargetIndex < enemies.size()) return enemies.get(currentTargetIndex);
         return null;

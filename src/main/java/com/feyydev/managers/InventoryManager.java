@@ -17,7 +17,7 @@ public class InventoryManager {
 
     public void setPlayer(Player player) { this.player = player; }
 
-    public List<Item> getItems() { return player.getInventory(); }
+    public List<Item> getItems() { return player != null ? player.getInventory() : List.of(); }
 
     public List<Item> getItemsByType(String type) {
         return player.getInventory().stream()
@@ -31,7 +31,7 @@ public class InventoryManager {
             .collect(Collectors.toList());
     }
 
-    public List<Weapon> getWeapons() { return player.getWeapons(); }
+    public List<Weapon> getWeapons() { return player != null ? player.getWeapons() : List.of(); }
 
     public List<Weapon> getWeaponsByRarity(String rarity) {
         return player.getWeapons().stream()
@@ -39,7 +39,7 @@ public class InventoryManager {
             .collect(Collectors.toList());
     }
 
-    public List<Armor> getArmors() { return player.getArmors(); }
+    public List<Armor> getArmors() { return player != null ? player.getArmors() : List.of(); }
 
     public List<Armor> getArmorsByRarity(String rarity) {
         return player.getArmors().stream()
@@ -76,8 +76,11 @@ public class InventoryManager {
     }
 
     public boolean hasItem(String itemId, int amount) {
-        return player.getInventory().stream()
-            .anyMatch(i -> i.getId().equals(itemId) && i.getQuantity() >= amount);
+        int total = player.getInventory().stream()
+            .filter(i -> i.getId().equals(itemId))
+            .mapToInt(Item::getQuantity)
+            .sum();
+        return total >= amount;
     }
 
     public void addWeapon(Weapon weapon) { player.getWeapons().add(weapon); }
@@ -104,9 +107,17 @@ public class InventoryManager {
     }
 
     public boolean buyItem(String itemId, long cost, String currency) {
-        if (currency.equals("GOLD")) return player.spendGold(cost);
-        if (currency.equals("GEMS")) return player.spendGems(cost);
-        return false;
+        if (currency.equals("GOLD")) {
+            if (!player.spendGold(cost)) return false;
+        } else if (currency.equals("GEMS")) {
+            if (!player.spendGems(cost)) return false;
+        } else {
+            return false;
+        }
+        Item bought = new Item(itemId, itemId, "Material", "", "Common", 0, 0);
+        bought.setQuantity(1);
+        addItem(bought);
+        return true;
     }
 
     public int getItemCount(String itemId) {

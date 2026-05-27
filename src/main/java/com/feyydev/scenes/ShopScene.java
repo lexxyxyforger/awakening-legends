@@ -31,6 +31,7 @@ public class ShopScene {
     }
 
     public Scene getScene() { return scene; }
+    public void refresh() { populateShop(); }
 
     private Scene buildScene() {
         BorderPane root = new BorderPane();
@@ -41,7 +42,10 @@ public class ShopScene {
         topBar.setAlignment(Pos.CENTER_LEFT);
         Button backBtn = new Button("\u2190 Back");
         backBtn.getStyleClass().add("back-button");
-        backBtn.setOnAction(e -> navigator.accept(SceneType.HOME));
+        backBtn.setOnAction(e -> {
+            System.out.println("[DEBUG] ShopScene Back clicked");
+            navigator.accept(SceneType.HOME);
+        });
         Label title = new Label("\uD83D\uDED2 Shop");
         title.getStyleClass().add("scene-title");
 
@@ -81,7 +85,7 @@ public class ShopScene {
         root.setCenter(new VBox(6, tabBar, scroll));
 
         Scene s = new Scene(root, Constants.WINDOW_WIDTH, Constants.WINDOW_HEIGHT);
-        s.getStylesheets().add(getClass().getResource("/com/feyydev/style.css").toExternalForm());
+        s.getStylesheets().add(getClass().getResource("/com/feyydev/global.css").toExternalForm());
         return s;
     }
 
@@ -151,7 +155,7 @@ public class ShopScene {
         iconLbl.setFont(Font.font(24));
         VBox info = new VBox(2);
         Label nameLbl = new Label(name);
-        nameLbl.setStyle("-fx-text-fill: #1e293b; -fx-font-size: 14px; -fx-font-weight: bold;");
+        nameLbl.setStyle("-fx-text-fill: #e2e8f0; -fx-font-size: 14px; -fx-font-weight: bold;");
         Label descLbl = new Label(desc);
         descLbl.setStyle("-fx-text-fill: #94a3b8; -fx-font-size: 12px;");
         info.getChildren().addAll(nameLbl, descLbl);

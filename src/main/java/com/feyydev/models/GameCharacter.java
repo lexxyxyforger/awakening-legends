@@ -30,28 +30,25 @@ public class GameCharacter {
     private int skillLevel;
 
     public GameCharacter() {
+        this.level = 1;
+        this.maxLevel = 80;
+        this.expToNext = 100;
         this.skillLevel = 1;
     }
 
     public GameCharacter(String id, String name, String rarity, String category) {
+        this();
         this.id = id;
         this.name = name;
         this.rarity = rarity;
         this.category = category;
-        this.level = 1;
         this.maxLevel = rarity.equals("SSR") ? 120 : rarity.equals("SR") ? 100 : 80;
-        this.exp = 0;
-        this.expToNext = 100;
-        this.duplicates = 0;
-        this.shards = 0;
-        this.awakeningLevel = 0;
-        this.evolutionLevel = 0;
-        this.skillLevel = 1;
         initStats();
     }
 
     private void initStats() {
-        switch (rarity) {
+        String r = rarity != null ? rarity : "R";
+        switch (r) {
             case "SSR":
                 maxHp = 5000 + (long)(level * 150) + (awakeningLevel * 500L) + (evolutionLevel * 1000L);
                 hp = maxHp;
@@ -89,6 +86,14 @@ public class GameCharacter {
     }
 
     public void recalcStats() { initStats(); }
+
+    public void postLoadFixup() {
+        if (rarity == null) rarity = "R";
+        if (maxLevel <= 0) maxLevel = rarity.equals("SSR") ? 120 : rarity.equals("SR") ? 100 : 80;
+        if (expToNext <= 0) expToNext = 100;
+        if (level <= 0) level = 1;
+        initStats();
+    }
 
     public void addExp(long amount) {
         exp += amount;
@@ -144,12 +149,19 @@ public class GameCharacter {
     public String getName() { return name; }
     public void setName(String name) { this.name = name; }
     public String getRarity() { return rarity != null ? rarity : "R"; }
-    public void setRarity(String rarity) { this.rarity = rarity; }
-    public String getCategory() { return category != null ? category : "Martial Artist"; }
+    public void setRarity(String rarity) {
+        this.rarity = rarity;
+        if (rarity != null) {
+            this.maxLevel = rarity.equals("SSR") ? 120 : rarity.equals("SR") ? 100 : 80;
+        }
+        recalcStats();
+    }
+    public String getCategory() { return category != null ? category : ""; }
     public void setCategory(String category) { this.category = category; }
     public int getLevel() { return level; }
     public void setLevel(int level) { this.level = level; recalcStats(); }
     public int getMaxLevel() { return maxLevel; }
+    public void setMaxLevel(int maxLevel) { this.maxLevel = maxLevel; }
     public long getHp() { return hp; }
     public void setHp(long hp) { this.hp = Math.max(0, Math.min(hp, maxHp)); }
     public long getMaxHp() { return maxHp; }
@@ -179,13 +191,13 @@ public class GameCharacter {
     public int getShards() { return shards; }
     public void setShards(int s) { this.shards = s; }
     public int getAwakeningLevel() { return awakeningLevel; }
-    public void setAwakeningLevel(int al) { this.awakeningLevel = al; }
+    public void setAwakeningLevel(int al) { this.awakeningLevel = al; recalcStats(); }
     public int getEvolutionLevel() { return evolutionLevel; }
-    public void setEvolutionLevel(int el) { this.evolutionLevel = el; }
+    public void setEvolutionLevel(int el) { this.evolutionLevel = el; recalcStats(); }
     public int getSkillLevel() { return skillLevel; }
-    public void setSkillLevel(int sl) { this.skillLevel = sl; }
+    public void setSkillLevel(int sl) { this.skillLevel = sl; recalcStats(); }
     public void addDuplicate() {
         this.duplicates++;
-        this.shards += rarity.equals("SSR") ? 50 : rarity.equals("SR") ? 25 : 10;
+        this.shards += rarity != null && rarity.equals("SSR") ? 50 : rarity != null && rarity.equals("SR") ? 25 : 10;
     }
 }

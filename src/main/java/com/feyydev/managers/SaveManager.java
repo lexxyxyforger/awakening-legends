@@ -18,9 +18,14 @@ public class SaveManager {
     }
 
     public boolean saveGame(Player player) {
-        String filePath = Constants.SAVE_DIR + "/" + Constants.SAVE_FILE;
-        player.calcTotalPower();
-        return jsonService.saveToFile(player, filePath);
+        try {
+            String filePath = Constants.SAVE_DIR + "/" + Constants.SAVE_FILE;
+            player.calcTotalPower();
+            return jsonService.saveToFile(player, filePath);
+        } catch (Exception e) {
+            System.err.println("Save failed: " + e.getMessage());
+            return false;
+        }
     }
 
     public Player loadGame() {
@@ -34,6 +39,8 @@ public class SaveManager {
                     player.setPlayerId(formatPlayerId(count));
                     if (player.getNextPlayerId() == 0) player.setNextPlayerId(101);
                 }
+                // Fix up all characters after Gson deserialization
+                player.getCharacters().forEach(c -> c.postLoadFixup());
                 return player;
             }
         } catch (Exception e) {
@@ -70,7 +77,13 @@ public class SaveManager {
     }
 
     public void deleteSave() {
-        java.io.File file = new java.io.File(Constants.SAVE_DIR + "/" + Constants.SAVE_FILE);
-        if (file.exists()) file.delete();
+        try {
+            java.io.File file = new java.io.File(Constants.SAVE_DIR + "/" + Constants.SAVE_FILE);
+            if (file.exists() && !file.delete()) {
+                System.err.println("Failed to delete save file: " + file.getPath());
+            }
+        } catch (Exception e) {
+            System.err.println("Error deleting save: " + e.getMessage());
+        }
     }
 }

@@ -22,7 +22,11 @@ public class QuestManager {
 
     public void setPlayer(Player player) {
         this.player = player;
-        initQuests();
+        if (dailyQuests == null && weeklyQuests == null && achievements == null) {
+            initQuests();
+        } else {
+            // Do NOT wipe progress on setPlayer — only re-init if null
+        }
     }
 
     private void initQuests() {
@@ -31,30 +35,39 @@ public class QuestManager {
         achievements = new ArrayList<>(Constants.createAchievementQuests());
     }
 
-    public List<Quest> getDailyQuests() { return dailyQuests; }
-    public List<Quest> getWeeklyQuests() { return weeklyQuests; }
-    public List<Quest> getAchievements() { return achievements; }
+    public List<Quest> getDailyQuests() {
+        if (dailyQuests == null) initQuests();
+        return dailyQuests;
+    }
+    public List<Quest> getWeeklyQuests() {
+        if (weeklyQuests == null) initQuests();
+        return weeklyQuests;
+    }
+    public List<Quest> getAchievements() {
+        if (achievements == null) initQuests();
+        return achievements;
+    }
 
     public List<Quest> getActiveQuests() {
         List<Quest> all = new ArrayList<>();
-        all.addAll(dailyQuests);
-        all.addAll(weeklyQuests);
-        all.addAll(achievements);
+        all.addAll(getDailyQuests());
+        all.addAll(getWeeklyQuests());
+        all.addAll(getAchievements());
         return all;
     }
 
     public void updateProgress(String requirement, int amount) {
-        for (Quest q : dailyQuests) {
+        for (Quest q : getDailyQuests()) {
             if (q.getRequirement().equals(requirement) && !q.isCompleted()) {
                 q.addProgress(amount);
             }
         }
-        for (Quest q : weeklyQuests) {
+        for (Quest q : getWeeklyQuests()) {
             if (q.getRequirement().equals(requirement) && !q.isCompleted()) {
                 q.addProgress(amount);
             }
         }
-        for (Quest q : achievements) {
+        for (Quest q : getAchievements()) {
             if (q.getRequirement().equals(requirement) && !q.isCompleted()) {
                 q.addProgress(amount);
             }
@@ -66,7 +79,7 @@ public class QuestManager {
         if (player.getCurrentStage() >= 1 && !isAchievementClaimed("achieve_first_clear")) {
             findAchievement("achieve_first_clear").ifPresent(q -> q.setCompleted(true));
         }
-        long kills = dailyQuests.stream().filter(q -> q.getRequirement().equals("KILL")).mapToInt(Quest::getProgress).sum();
+        long kills = getDailyQuests().stream().filter(q -> q.getRequirement().equals("KILL")).mapToInt(Quest::getProgress).sum();
         if (kills >= 50 && !isAchievementClaimed("achieve_50_kills")) {
             findAchievement("achieve_50_kills").ifPresent(q -> q.setCompleted(true));
         }
@@ -83,11 +96,11 @@ public class QuestManager {
     }
 
     private java.util.Optional<Quest> findAchievement(String id) {
-        return achievements.stream().filter(q -> q.getId().equals(id)).findFirst();
+        return getAchievements().stream().filter(q -> q.getId().equals(id)).findFirst();
     }
 
     public boolean claimReward(String questId) {
-        for (Quest q : dailyQuests) {
+        for (Quest q : getDailyQuests()) {
             if (q.getId().equals(questId) && q.isReadyToClaim()) {
                 player.addGold(q.getRewardGold());
                 player.addGems(q.getRewardGems());
@@ -96,7 +109,7 @@ public class QuestManager {
                 return true;
             }
         }
-        for (Quest q : weeklyQuests) {
+        for (Quest q : getWeeklyQuests()) {
             if (q.getId().equals(questId) && q.isReadyToClaim()) {
                 player.addGold(q.getRewardGold());
                 player.addGems(q.getRewardGems());
@@ -105,7 +118,7 @@ public class QuestManager {
                 return true;
             }
         }
-        for (Quest q : achievements) {
+        for (Quest q : getAchievements()) {
             if (q.getId().equals(questId) && q.isReadyToClaim()) {
                 player.addGold(q.getRewardGold());
                 player.addGems(q.getRewardGems());
@@ -123,7 +136,7 @@ public class QuestManager {
     }
 
     public boolean allDailyClaimed() {
-        return dailyQuests.stream().allMatch(Quest::isClaimed);
+        return getDailyQuests().stream().allMatch(Quest::isClaimed);
     }
 
     public int getUnclaimedCount() {

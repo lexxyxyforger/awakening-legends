@@ -40,7 +40,10 @@ public class MailboxScene {
         topBar.setAlignment(Pos.CENTER_LEFT);
         Button backBtn = new Button("\u2190 Back");
         backBtn.getStyleClass().add("back-button");
-        backBtn.setOnAction(e -> navigator.accept(SceneType.HOME));
+        backBtn.setOnAction(e -> {
+            System.out.println("[DEBUG] MailboxScene Back clicked");
+            navigator.accept(SceneType.HOME);
+        });
         Label title = new Label("\uD83D\uDCEB Mailbox");
         title.getStyleClass().add("scene-title");
 
@@ -70,7 +73,7 @@ public class MailboxScene {
         root.setCenter(scroll);
 
         Scene s = new Scene(root, Constants.WINDOW_WIDTH, Constants.WINDOW_HEIGHT);
-        s.getStylesheets().add(getClass().getResource("/com/feyydev/style.css").toExternalForm());
+        s.getStylesheets().add(getClass().getResource("/com/feyydev/global.css").toExternalForm());
         return s;
     }
 
@@ -108,7 +111,7 @@ public class MailboxScene {
 
         VBox info = new VBox(2);
         Label title = new Label(mail.getTitle());
-        title.setStyle("-fx-text-fill: #1e293b; -fx-font-size: 14px; -fx-font-weight: bold;");
+        title.setStyle("-fx-text-fill: #e2e8f0; -fx-font-size: 14px; -fx-font-weight: bold;");
         Label sender = new Label("From: " + mail.getSenderName());
         sender.setStyle("-fx-text-fill: #94a3b8; -fx-font-size: 11px;");
         Label msg = new Label(mail.getMessage());
@@ -132,22 +135,22 @@ public class MailboxScene {
 
         if (mail.getRewardGold() > 0) {
             Label r = new Label("\uD83D\uDCB0+" + Constants.formatNumber(mail.getRewardGold()));
-            r.setStyle("-fx-text-fill: #fbbf24; -fx-font-size: 12px; -fx-font-weight: bold; -fx-background-color: rgba(251,191,36,0.08); -fx-padding: 3 8; -fx-background-radius: 6;");
+            r.getStyleClass().add("reward-badge-gold");
             rewardRow.getChildren().add(r);
         }
         if (mail.getRewardGems() > 0) {
             Label r = new Label("\uD83D\uDC8E+" + Constants.formatNumber(mail.getRewardGems()));
-            r.setStyle("-fx-text-fill: #c084fc; -fx-font-size: 12px; -fx-font-weight: bold; -fx-background-color: rgba(192,132,252,0.08); -fx-padding: 3 8; -fx-background-radius: 6;");
+            r.getStyleClass().add("reward-badge-gems");
             rewardRow.getChildren().add(r);
         }
         if (mail.getRewardExp() > 0) {
             Label r = new Label("\u2B50+" + Constants.formatNumber(mail.getRewardExp()) + " EXP");
-            r.setStyle("-fx-text-fill: #a855f7; -fx-font-size: 12px; -fx-font-weight: bold; -fx-background-color: rgba(168,85,247,0.08); -fx-padding: 3 8; -fx-background-radius: 6;");
+            r.getStyleClass().add("reward-badge-exp");
             rewardRow.getChildren().add(r);
         }
         if (mail.getRewardSummonTickets() > 0) {
             Label r = new Label("\uD83C\uDF81+" + mail.getRewardSummonTickets() + " Ticket");
-            r.setStyle("-fx-text-fill: #3b82f6; -fx-font-size: 12px; -fx-font-weight: bold; -fx-background-color: rgba(59,130,246,0.08); -fx-padding: 3 8; -fx-background-radius: 6;");
+            r.getStyleClass().add("reward-badge-ticket");
             rewardRow.getChildren().add(r);
         }
 
